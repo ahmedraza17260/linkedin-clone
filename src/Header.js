@@ -7,8 +7,15 @@ import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import ChatIcon from "@material-ui/icons/Chat";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+// import { Link } from "react-router-dom";
 
 function Header() {
+  // const handleAuthentication = () => {
+  //   if (user) {
+  //     auth.signOut();
+  //   }
+  // };
+
   return (
     <div className="header">
       <div className="header__left">
@@ -31,6 +38,20 @@ function Header() {
           avatar="https://lh3.googleusercontent.com/ogw/ADGmqu-XgN0i2rmPFtSabi9iyRZ9LfetqCTiefzeSPGS=s83-c-mo"
           title="Me"
         />
+        {/* <Link to={!user && "/login"}>
+          <div
+            onClick={handleAuthentication}
+            className="header__option"
+            type="text"
+          >
+            <span className="header__optionLineOne">
+              Hello {!user ? "Guest" : user.email}
+            </span>
+            <span className="header__optionLineTwo">
+              {user ? "Sign Out" : "Sign In"}
+            </span>
+          </div>
+        </Link> */}
       </div>
     </div>
   );
