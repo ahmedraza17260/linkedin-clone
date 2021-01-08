@@ -1,85 +1,129 @@
 import React, { useState } from "react";
 import "./Login.css";
-import { Link, useHistory } from "react-router-dom";
 import { auth } from "./firebase";
+import { useDispatch } from "react-redux";
+import { login } from "./features/userSlice";
+// import { Link, useHistory } from "react-router-dom";
 
 function Login() {
-  const history = useHistory();
+  // const history = useHistory();
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [profilePic, setProfilePic] = useState("");
+  const dispatch = useDispatch();
 
-  const signIn = (e) => {
+  const loginToApp = (e) => {
     e.preventDefault();
 
     auth
       .signInWithEmailAndPassword(email, password)
-      .then((auth) => {
-        history.push("/");
+      .then((userAuth) => {
+        dispatch(
+          login({
+            email: userAuth.user.email,
+            uid: userAuth.user.uid,
+            displayName: userAuth.user.displayName,
+            profileUrl: userAuth.user.photoURL,
+          })
+        );
       })
       .catch((error) => alert(error.message));
   };
 
   const register = (e) => {
+    if (!name) {
+      return alert("Name is Required");
+    }
     e.preventDefault();
 
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then((auth) => {
-        // it successfully created a new user with email and password
-        if (auth) {
-          history.push("/");
-        }
+      .then((userAuth) => {
+        userAuth.user
+          .updateProfile({
+            displayName: name,
+            photoURL: profilePic,
+          })
+          .then(() => {
+            dispatch(
+              login({
+                email: userAuth.user.email,
+                uid: userAuth.user.uid,
+                displayName: name,
+                profileURL: profilePic,
+              })
+            );
+          });
       })
       .catch((error) => alert(error.message));
   };
 
   return (
     <div className="login">
-      {/* <Link to="/"> */}
       <img
         className="login__logo"
-        src="https://www.flaticon.com/svg/static/icons/svg/174/174857.svg"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/LinkedIn_Logo.svg/1280px-LinkedIn_Logo.svg.png"
         alt="Linkedin Logo"
       />
-      {/* </Link> */}
 
-      <div className="login__container">
-        <h1>Sign-in</h1>
+      <form>
+        <h5>Name</h5>
+        <input
+          required
+          placeholder="Required if Registration"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-        <form>
-          <h5>E-mail</h5>
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        <h5>Profile Pic URL</h5>
+        <input
+          required
+          placeholder="Profile Pic URL (Optional)"
+          type="text"
+          value={profilePic}
+          onChange={(e) => setProfilePic(e.target.value)}
+        />
 
-          <h5>Password</h5>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <h5>E-mail</h5>
+        <input
+          required
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          <button
-            type="submit"
-            onClick={signIn}
-            className="login__signInButton"
-          >
-            Sign In
-          </button>
-        </form>
+        <h5>Password</h5>
+        <input
+          required
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <p>
-          By signing-in you agree to the LINKEDIN FAKE CLONE Conditions of Use
-          Please see our Privacy Notice, our Cookies Notice and our
-          Interest-Based Ads Notice.
-        </p>
-
-        <button onClick={register} className="login__registerButton">
-          Create your Linkedin Account
+        <button
+          type="submit"
+          onClick={loginToApp}
+          className="login__signInButton"
+        >
+          Sign In
         </button>
-      </div>
+      </form>
+
+      {/* <p>
+        By clicking Agree & Join, you agree to the FAKE LinkedIn User Agreement,
+        Privacy Policy, and Cookie Policy.
+      </p> */}
+      <p className="login__button">
+        Not a member ?{" "}
+        <span className="login__register" onClick={register}>
+          Register Now
+        </span>
+      </p>
+      {/* <button onClick={register} className="login__registerButton">
+          Create your Linkedin Account
+        </button> */}
     </div>
   );
 }

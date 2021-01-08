@@ -7,14 +7,18 @@ import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import BusinessCenterIcon from "@material-ui/icons/BusinessCenter";
 import ChatIcon from "@material-ui/icons/Chat";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import { useDispatch } from "react-redux";
+import { logout } from "./features/userSlice";
+import { auth } from "./firebase";
 // import { Link } from "react-router-dom";
 
 function Header() {
-  // const handleAuthentication = () => {
-  //   if (user) {
-  //     auth.signOut();
-  //   }
-  // };
+  const dispatch = useDispatch();
+
+  const logoutOfApp = () => {
+    dispatch(logout());
+    auth.signOut();
+  };
 
   return (
     <div className="header">
@@ -25,7 +29,7 @@ function Header() {
         />
         <div className="header__search">
           <SearchIcon />
-          <input type="text" />
+          <input placeholder="Search" type="text" />
         </div>
       </div>
       <div className="header__right">
@@ -34,24 +38,7 @@ function Header() {
         <HeaderOption Icon={BusinessCenterIcon} title="Jobs" />
         <HeaderOption Icon={ChatIcon} title="Messaging" />
         <HeaderOption Icon={NotificationsIcon} title="Notifications" />
-        <HeaderOption
-          avatar="https://lh3.googleusercontent.com/ogw/ADGmqu-XgN0i2rmPFtSabi9iyRZ9LfetqCTiefzeSPGS=s83-c-mo"
-          title="Me"
-        />
-        {/* <Link to={!user && "/login"}>
-          <div
-            onClick={handleAuthentication}
-            className="header__option"
-            type="text"
-          >
-            <span className="header__optionLineOne">
-              Hello {!user ? "Guest" : user.email}
-            </span>
-            <span className="header__optionLineTwo">
-              {user ? "Sign Out" : "Sign In"}
-            </span>
-          </div>
-        </Link> */}
+        <HeaderOption avatar={true} title="Me" onClick={logoutOfApp} />
       </div>
     </div>
   );
