@@ -27,3 +27,10 @@
   display: flex;
   justify-content: space-evenly;
 }
+
+/* .post__buttons :hover {
+  color: blue;
+} */
+.blueColor {
+  color: rgba(36, 123, 238, 0.979);
+}
